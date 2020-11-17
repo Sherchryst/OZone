@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ozone/view/home/homebody.dart';
 
-String selectedSensor = "Temperatur";
+String selectedSensor = "Now";
 
 class HomePage extends StatefulWidget {
   @override

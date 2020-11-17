@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ozone/view/home/homepage.dart';
+import 'package:ozone/data/sensors.dart';
+import 'package:ozone/view/home/sensor.dart';
 
 class HomeBody extends StatefulWidget {
   @override
@@ -7,13 +9,13 @@ class HomeBody extends StatefulWidget {
 }
 
 class _HomeBodyState extends State<HomeBody> {
-  List<String> sensor = [
-    "Temperatur",
-    "humidity",
-    "rainfall",
-    "atmospheric pressure",
-    "wind"
-  ];
+  List<SensorModel> sensors;
+  List<String> sensor = ["Now", "today", "15 Days", "30 Days", "by Hour"];
+  @override
+  void initState() {
+    super.initState();
+    sensors = getsensor();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +65,7 @@ class _HomeBodyState extends State<HomeBody> {
             Text(
               "Sensor",
               style: TextStyle(
-                  // CATEGORIE TEXT
+                  // sensor TEXT
                   color: Color(0xff707171),
                   fontSize: 20,
                   fontWeight: FontWeight.w600),
@@ -82,15 +84,35 @@ class _HomeBodyState extends State<HomeBody> {
                   physics: ClampingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
-                    //Contructeur de list
-                    return CategorieTile(
-                      //Function return categories on home page
-                      categorie: sensor[index],
+                    // SENSOR LISTVIEW BUILDER
+                    return SensorTile(
+                      //Function return sensors on home page
+                      sensor: sensor[index],
                       isSelected: selectedSensor == sensor[index],
                       context: this,
                     );
                   }),
             ),
+            SizedBox(
+              // EMPTY SPACE
+              height: 20,
+            ),
+            Container(
+              height: 250,
+              child: ListView.builder(
+                itemCount: sensors.length,
+                shrinkWrap: true,
+                physics: ClampingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  return SensorsTile(
+                    sensor: sensors[index].sensor,
+                    noOfSensor: sensors[index].noOfSensor,
+                    backColor: sensors[index].backgroundColor,
+                  );
+                },
+              ),
+            )
           ],
         ),
       ),
@@ -98,42 +120,42 @@ class _HomeBodyState extends State<HomeBody> {
   }
 }
 
-class CategorieTile extends StatefulWidget {
-  final String categorie;
+class SensorTile extends StatefulWidget {
+  final String sensor;
   final bool isSelected;
   final _HomeBodyState context;
-  CategorieTile({this.categorie, this.isSelected, this.context});
+  SensorTile({this.sensor, this.isSelected, this.context});
 
   @override
-  _CategorieTileState createState() => _CategorieTileState();
+  _SensorTileState createState() => _SensorTileState();
 }
 
-class _CategorieTileState extends State<CategorieTile> {
+class _SensorTileState extends State<SensorTile> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        //Action when categorie is tap
+        //Action when sensor is tap
         widget.context.setState(() {
-          selectedSensor = widget.categorie;
-          print('you tap on ${widget.categorie}');
+          selectedSensor = widget.sensor;
+          print('you tap on ${widget.sensor}');
         });
       },
       child: Container(
-        //container categoriTile
+        //container SensorTile
         alignment: Alignment.center,
         padding: EdgeInsets.symmetric(horizontal: 20),
         margin: EdgeInsets.only(left: 8),
         height: 30,
         decoration: BoxDecoration(
-            //decoration categoriTile
+            //decoration SensorTile
             color: Colors.white,
             borderRadius: BorderRadius.circular(30),
             border: Border.all(
                 color: widget.isSelected ? Colors.black : Colors.white,
                 width: 2)),
         child: Text(
-          widget.categorie,
+          widget.sensor,
           style: TextStyle(
               color: widget.isSelected ? Colors.black : Color(0xff707171)),
         ),
