@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:ozone/data/products.dart';
 import 'package:ozone/view/home/homepage.dart';
 import 'package:ozone/data/sensors.dart';
+import 'package:ozone/view/home/product.dart';
 import 'package:ozone/view/home/sensor.dart';
 
 class HomeBody extends StatefulWidget {
@@ -9,12 +11,14 @@ class HomeBody extends StatefulWidget {
 }
 
 class _HomeBodyState extends State<HomeBody> {
+  List<ProductModel> products;
   List<SensorModel> sensors;
   List<String> sensor = ["Now", "today", "15 Days", "30 Days", "by Hour"];
   @override
   void initState() {
     super.initState();
     sensors = getsensor();
+    products = getproduct();
   }
 
   @override
@@ -85,7 +89,7 @@ class _HomeBodyState extends State<HomeBody> {
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
                     // SENSOR LISTVIEW BUILDER
-                    return SensorTile(
+                    return TimeTile(
                       //Function return sensors on home page
                       sensor: sensor[index],
                       isSelected: selectedSensor == sensor[index],
@@ -112,6 +116,37 @@ class _HomeBodyState extends State<HomeBody> {
                   );
                 },
               ),
+            ),
+            SizedBox(
+              // EMPTY SPACE
+              height: 20,
+            ),
+            Text(
+              "Products",
+              style: TextStyle(
+                  //Title products list
+                  color: Color(0xff707171),
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600),
+            ),
+            SizedBox(
+              // EMPTY SPACE
+              height: 20,
+            ),
+            Container(
+              height: 180,
+              child: ListView.builder(
+                  itemCount: products.length,
+                  shrinkWrap: true,
+                  physics: ClampingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return ProductTile(
+                      //Products list
+                      nameOfProduction: products[index].nameOfProduction,
+                      variety: products[index].variety,
+                      density: products[index].density,
+                    );
+                  }),
             )
           ],
         ),
@@ -120,17 +155,17 @@ class _HomeBodyState extends State<HomeBody> {
   }
 }
 
-class SensorTile extends StatefulWidget {
+class TimeTile extends StatefulWidget {
   final String sensor;
   final bool isSelected;
   final _HomeBodyState context;
-  SensorTile({this.sensor, this.isSelected, this.context});
+  TimeTile({this.sensor, this.isSelected, this.context});
 
   @override
-  _SensorTileState createState() => _SensorTileState();
+  _TimeTileState createState() => _TimeTileState();
 }
 
-class _SensorTileState extends State<SensorTile> {
+class _TimeTileState extends State<TimeTile> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -142,13 +177,13 @@ class _SensorTileState extends State<SensorTile> {
         });
       },
       child: Container(
-        //container SensorTile
+        //container TimeTile
         alignment: Alignment.center,
         padding: EdgeInsets.symmetric(horizontal: 20),
         margin: EdgeInsets.only(left: 8),
         height: 30,
         decoration: BoxDecoration(
-            //decoration SensorTile
+            //decoration TimeTile
             color: Colors.white,
             borderRadius: BorderRadius.circular(30),
             border: Border.all(
